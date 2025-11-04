@@ -13,7 +13,7 @@
 
 // Set to 1 to activate 32-bit item sizes, however sort
 // stability verification is lost when this is done
-#define	USE32BIT		1
+#define	USE32BIT		0
 
 static	int	disorder_factor = 100;
 static	int	data_set_ops = 0;
