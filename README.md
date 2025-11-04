@@ -81,9 +81,23 @@ Deposition In-Place Unstable    0.374s
 Deposition Workspace Stable     0.369s
 ```
 
+And here are the results for 1% disordering (1 in 100 items out of order).  It's interesting
+to see the most basic version of DepositionSort really shine here.  If your use case involves
+sorting mostly sorted data, then the simple algorithm is arguably your best choice.
+
+```
+GLibC Qsort                     0.336s
+Bentley/McIlroy QuickSort       0.298s
+Deposition Simple               0.211s
+Deposition In-Place Stable      0.260s
+Deposition In-Place Unstable    0.257s
+Deposition Workspace Stable     0.261s
+```
+
 What about reversed data ordering?  Depositionsort doesn't make any explicit checks for
 reversed ordering, but it still runs quickly, although it is outpaced by GLibC Qsort
-in this test.
+in this test.  It's very interesting though to see how quickly the raw Deposition Merge
+algorithm can re-arranged reverse sorted data.
 
 ```
 GLibC Qsort                     0.311s
