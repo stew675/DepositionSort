@@ -33,10 +33,11 @@ Usage: ts [options] <sorttype< <num>
         -w <num>    Optional workspace size (in elements) to pass to the sorting algorithm
 
 Available Sort Types:
-   gq   - GLibc Quick Sort In-Place (Stability Not Guaranteed)
-   di   - Simple Deposition Merge Sort In-Place (Stable)
-   ds   - Adaptive Deposition Merge Sort In-Place (Stable)
-   du   - Adaptive Deposition Merge Sort In-Place (Unstable)
+   gq   - GLibc Quick Sort In-Place                  (Stability Not Guaranteed)
+   nq   - Bentley/McIlroy Quick Sort                 (Unstable)
+   di   - Simple Deposition Merge Sort In-Place      (Stable)
+   ds   - Stable Deposition Merge Sort In-Place      (Stable)
+   du   - Adaptive Deposition Merge Sort In-Place    (Unstable)
 ```
 
 For example:
@@ -56,10 +57,11 @@ random items on an AMD 9800X3D CPU
 
 ```
 GLibC Qsort                     1.103s
-Deposition Simple*              1.489s
-Deposition In-Place Stable      0.927s
-Deposition In-Place Unstable    0.827s
-Deposition Workspace Stable**   0.815s
+Bentley/McIlroy QuickSort       0.938s
+Deposition Simple*              1.519s
+Deposition In-Place Stable      0.916s
+Deposition In-Place Unstable    0.835s
+Deposition Workspace Stable**   0.816s
 
 *  This is the raw DepositionSort merge algorithm implemented in its most basic manner
    It is sort-stable and in-place, but isn't using any techniques to speed it up.
@@ -71,25 +73,25 @@ What about on mostly sorted data sets?  Here's the speeds when given data that
 has been disordered by 5% (ie. 1 in 20 items are out of order)
 
 ```
-GLibC Qsort                     0.416s
-Deposition Simple               0.358s
-Deposition In-Place Stable      0.381s
-Deposition In-Place Unstable    0.379s
-Deposition Workspace Stable     0.365s
+GLibC Qsort                     0.412s
+Bentley/McIlroy QuickSort       0.354s
+Deposition Simple               0.378s
+Deposition In-Place Stable      0.378s
+Deposition In-Place Unstable    0.374s
+Deposition Workspace Stable     0.369s
 ```
-
-Somewhat surprising here is the ability of the basic Deposition Sort merge to outpace
-the other algorithms
 
 What about reversed data ordering?  Depositionsort doesn't make any explicit checks for
-reversed ordering, so it runs at
+reversed ordering, but it still runs quickly, although it is outpaced by GLibC Qsort
+in this test.
 
 ```
-GLibC Qsort                     1.101s
-Deposition Simple               1.496s
-Deposition In-Place Stable      0.932s
-Deposition In-Place Unstable    0.853s
-Deposition Workspace Stable     0.813s
+GLibC Qsort                     0.311s
+Bentley/McIlroy QuickSort       0.405s
+Deposition Simple               0.221s
+Deposition In-Place Stable      0.433s
+Deposition In-Place Unstable    0.387s
+Deposition Workspace Stable     0.391s
 ```
 
 ...and finally when using wholly sorted data, to demonstrate its adaptability.  The
@@ -99,6 +101,7 @@ it initially scanning to build a working set before "realising", whereas the oth
 
 ```
 GLibC Qsort                     0.212s
+Bentley/McIlroy QuickSort       0.259s
 Deposition Simple               0.017s
 Deposition In-Place Stable      0.021s
 Deposition In-Place Unstable    0.018s
